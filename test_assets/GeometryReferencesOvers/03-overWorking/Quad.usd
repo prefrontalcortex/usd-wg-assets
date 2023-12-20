@@ -1,0 +1,40 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Needle Engine USDZExporter"
+    }
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def "Geometry"
+{
+  
+    def Mesh "Geometry" 
+    {
+        int[] faceVertexCounts = [3, 3]
+        int[] faceVertexIndices = [1, 3, 0, 2, 0, 3]
+        normal3f[] normals = [(0.000000, 0.000000, -1.000000), (0.000000, 0.000000, -1.000000), (0.000000, 0.000000, -1.000000), (0.000000, 0.000000, -1.000000)] (
+            interpolation = "vertex"
+        )
+        point3f[] points = [(0.5000000, -0.5000000, -3.061617e-17), (-0.5000000, -0.5000000, -3.061617e-17), (0.5000000, 0.5000000, 3.061617e-17), (-0.5000000, 0.5000000, 3.061617e-17)]
+        texCoord2f[] primvars:st = [(0.000000, 0), (1.000000, 0), (0.000000, 1), (1.000000, 1)] (
+            interpolation = "vertex"
+        )
+		
+        uniform token subdivisionScheme = "none"
+    }
+
+}
+
+# This is a workaround for QuickLook/RealityKit not supporting the doubleSided attribute. We're adding a second
+# geometry definition here, that uses the same mesh data but appends extra faces with reversed winding order.
+over "Geometry_doubleSided" (
+    prepend references = </Geometry>
+)
+{
+    over "Geometry" {
+        int[] faceVertexCounts = [3, 3, 3, 3]
+        int[] faceVertexIndices = [1, 3, 0, 2, 0, 3, 0, 3, 1, 3, 0, 2]
+    }
+}
