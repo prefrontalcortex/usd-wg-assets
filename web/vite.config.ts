@@ -27,8 +27,8 @@ export default defineConfig(() => {
 
 	return {
 		plugins: [
+			viteStaticCopy({ targets: copyTargets, structured: false }),
 			sveltekit(),
-			viteStaticCopy({ targets: copyTargets }),
 		],
 	}
 });

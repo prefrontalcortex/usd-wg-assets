@@ -5,6 +5,32 @@
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
+		<style type="text/css">
+			body {
+				font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+				font-weight: 300;
+				margin: 40px;
+			}
+
+			h2 {
+				font-weight: normal;
+				letter-spacing: 0.1em;
+			}
+
+			a {
+				color: grey;
+				text-decoration: none;
+			}
+
+			a:hover {
+				color: black;
+				text-decoration: underline;
+			}
+
+			button {
+				color: black;
+			}
+		</style>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>

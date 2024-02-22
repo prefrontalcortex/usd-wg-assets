@@ -3,10 +3,15 @@ import { base } from '$app/paths';
 import type { HierarchyEntry } from '$lib/files';
 
 export let child: HierarchyEntry;
+
+function stripFileExtension(filename: string) {
+    return filename.split('.').slice(0, -1).join('.');
+}
+
 </script>
 
 {#if child.name}
-<a href={child.name}><h2>{child.name}</h2></a>
+<h2><a href={base}/{child.name}>{child.name}</a></h2>
 {/if}
 
 {#if child.items}
@@ -14,7 +19,7 @@ export let child: HierarchyEntry;
     {#each child.items as item}
     <div>
         <img src="{base}/{item.src}" alt="Thumbnail"/>
-        <span>{item.filename}</span>
+        <span>{stripFileExtension(item.filename)}</span>
     </div>
     {/each}
 </div>

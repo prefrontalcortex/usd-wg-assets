@@ -1,7 +1,12 @@
 import { getFiles } from "$lib/files";
 
 export const prerender = true;
+export const ssr = false;
+export const trailingSlash = 'always';
+
 const posts = getFiles();
+
+console.log("rendering", posts);
 
 export async function load() {
 

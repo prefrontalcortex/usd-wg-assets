@@ -14,12 +14,26 @@ export class HierarchyEntry {
     items: Array<HierarchyItem> = [];
 }
 
+let vari = 0;
 export function getFiles() {
     
-    const directory = "/";
-    const thisPath = import.meta.url.replace("file:///", "");
-    const base = normalizePath(path.resolve(thisPath + "/../../../.." + directory) + "/");
+    // walk up from import.meta.url until we find a package.json in the parent directory
+    const findPackageJson = (dir: string): string => {
+        const parent = path.resolve(dir, "..");
+        if (parent === dir) {
+            throw new Error("Could not find package.json");
+        }
+        if (globSync(path.join(parent, "package.json")).length) {
+            return parent;
+        }
+        return findPackageJson(parent);
+    }
 
+
+    const directory = "";
+    const projectDirectory = findPackageJson(import.meta.url);
+    const base = normalizePath(path.resolve(projectDirectory + "/../" + directory) + "/");
+    
     const hierarchy: HierarchyEntry = { name : "", children: [], items: [] };
     const addFileToHierarchy = (file: string, item: string) => {
         const parts = file.split("/");
@@ -38,16 +52,21 @@ export function getFiles() {
         current.items.push({
             filename: path.basename(item),
             absolute: normalizePath(item),
-            src: "images/" + path.dirname(relative) + "/" + path.basename(relative),
+            src: path.dirname(relative) + "/" + path.basename(relative),
         });
     }
 
-    globSync(base + "**/thumbnails/**.png").map(file => {
-        const relativeToBase = normalizePath(path.relative(base, file));
-        const assetName = relativeToBase.split("/")[0];
-        const subassetName = relativeToBase.split("/thumbnails")[0].split("/").pop();
-        addFileToHierarchy(assetName + "/" + subassetName, file);
-    });
+    const collectFiles = (directory: string) => {
+        globSync(base + directory + "**/thumbnails/**.png").map(file => {
+            const relativeToBase = normalizePath(path.relative(base, file));
+            const assetName = relativeToBase.split("/")[0];
+            const subassetName = relativeToBase.split("/thumbnails")[0].split("/").pop();
+            addFileToHierarchy(assetName + "/" + subassetName, file);
+        });
+    }
+
+    collectFiles("test_assets/");
+    collectFiles("full_assets/");
 
     return hierarchy;
 }
