@@ -5,12 +5,16 @@ import { normalizePath } from "vite";
 export class HierarchyItem {
     filename: string = "";
     absolute: string = "";
+    absoluteUsd: string = "";
     src: string = "";
+    path: string = "";
 }
 
 export class HierarchyEntry {
     name: string = "";
+    path: string = "";
     children: HierarchyEntry[] = [];
+    totalChildren: number = 0;
     items: Array<HierarchyItem> = [];
 }
 
@@ -29,31 +33,48 @@ export function getFiles() {
         return findPackageJson(parent);
     }
 
-
     const directory = "";
     const projectDirectory = findPackageJson(import.meta.url);
     const base = normalizePath(path.resolve(projectDirectory + "/../" + directory) + "/");
     
-    const hierarchy: HierarchyEntry = { name : "", children: [], items: [] };
+    const hierarchy: HierarchyEntry = { name : "", children: [], items: [], totalChildren: 0, path: "" };
     const addFileToHierarchy = (file: string, item: string) => {
         const parts = file.split("/");
         let current = hierarchy;
         for (const part of parts) {
             let found = current.children.find(child => child.name === part);
             if (!found) {
-                found = { name: part, children: [], items: [] }
+                found = { name: part, children: [], items: [], totalChildren: 0, path: current.path + "/" + part};
                 current.children.push(found);
             }
             current = found;
+            current.totalChildren++;
         }
 
         const relative = normalizePath(path.relative(base, item));
-
-        current.items.push({
-            filename: path.basename(item),
-            absolute: normalizePath(item),
-            src: path.dirname(relative) + "/" + path.basename(relative),
+        const filename = path.basename(item);
+        // without ext
+        const name = path.basename(item, path.extname(item));
+        const absolute = normalizePath(item);
+        // walk two directories up, so we're next to "thumbnails"
+        const pathWithUsdFiles = normalizePath(path.resolve(item, "..", ".."));
+        const allowedExtensions = [".usd", ".usda", ".usdc", ".usdz"];
+        const usdFiles = globSync(pathWithUsdFiles + "/" + name + ".*").filter(file => {
+            const ext = path.extname(file);
+            return allowedExtensions.includes(ext);
         });
+        const firstUsdFile = usdFiles.length > 0 ? usdFiles[0] : "";
+        
+        current.items.push({
+            filename: name,
+            absolute: absolute,
+            absoluteUsd: firstUsdFile,
+            src: path.dirname(relative) + "/" + path.basename(relative),
+            path: current.path + "/" + path.basename(firstUsdFile),
+        });
+
+        // log last item
+        console.log(current.items[current.items.length - 1]);
     }
 
     const collectFiles = (directory: string) => {

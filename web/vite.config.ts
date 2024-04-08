@@ -21,7 +21,11 @@ export default defineConfig(() => {
 			{
 				src: file.absolute,
 				dest: dest,
-			}
+			},
+			{
+				src: file.absoluteUsd,
+				dest: dest,
+			},
 		]
 	}));
 

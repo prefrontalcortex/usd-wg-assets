@@ -1,4 +1,5 @@
 <script lang="ts">
+import { base } from '$app/paths';
 import type { HierarchyEntry } from '$lib/files';
 import GridItem from '../GridItem.svelte';
 export let data;
@@ -13,12 +14,12 @@ function getChilds() {
     return childItems;
 }
 
-$: current = getChilds().find(child => child.name === data.slug);
+$: current = getChilds().find(child => child.path === data.slug);
 
 </script>
 
 <div>
-<a href="/">See all assets</a>
+<a href={base}>See all assets</a>
 
 {#if current}
     <article>

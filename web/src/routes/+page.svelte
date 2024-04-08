@@ -7,7 +7,7 @@ export let data;
 <div>
 {#each data.posts.children as child}
     <article>
-        <GridItem child={child} />
+        <GridItem child={child} depth={1}/>
     </article>
 {/each}
 </div>
