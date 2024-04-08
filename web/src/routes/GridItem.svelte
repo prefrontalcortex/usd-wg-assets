@@ -21,7 +21,7 @@ function stripFileExtension(filename: string) {
 {#if child.items}
 <div class="grid">
     {#each child.items as item}
-    <a href={base}{item.path}>
+    <a href={base}/{item.path}>
         <div>
             <img src={base}/{item.src} alt="Thumbnail"/>
             <span>{item.filename}</span>

@@ -8,6 +8,7 @@ export class HierarchyItem {
     absoluteUsd: string = "";
     src: string = "";
     path: string = "";
+    ext: string = "";
 }
 
 export class HierarchyEntry {
@@ -52,7 +53,6 @@ export function getFiles() {
         }
 
         const relative = normalizePath(path.relative(base, item));
-        const filename = path.basename(item);
         // without ext
         const name = path.basename(item, path.extname(item));
         const absolute = normalizePath(item);
@@ -64,13 +64,15 @@ export function getFiles() {
             return allowedExtensions.includes(ext);
         });
         const firstUsdFile = usdFiles.length > 0 ? usdFiles[0] : "";
+        const relativeUsdFile = normalizePath(path.relative(base, firstUsdFile));
         
         current.items.push({
             filename: name,
             absolute: absolute,
             absoluteUsd: firstUsdFile,
             src: path.dirname(relative) + "/" + path.basename(relative),
-            path: current.path + "/" + path.basename(firstUsdFile),
+            path: path.dirname(relativeUsdFile) + "/" + path.basename(firstUsdFile, path.extname(firstUsdFile)),
+            ext: path.extname(firstUsdFile),
         });
 
         // log last item

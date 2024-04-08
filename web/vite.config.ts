@@ -17,6 +17,7 @@ export default defineConfig(() => {
 	const copyTargets: Target[] = [];
 	copyTargets.push(...childItems.flatMap(file => {
 		const dest = path.dirname(file.src);
+		const destParent = path.dirname(file.path);
 		return [
 			{
 				src: file.absolute,
@@ -24,7 +25,7 @@ export default defineConfig(() => {
 			},
 			{
 				src: file.absoluteUsd,
-				dest: dest,
+				dest: destParent,
 			},
 		]
 	}));
@@ -34,5 +35,12 @@ export default defineConfig(() => {
 			viteStaticCopy({ targets: copyTargets, structured: false }),
 			sveltekit(),
 		],
+		server: {
+			headers: {
+				// allow SharedArrayBuffers
+				'Cross-Origin-Opener-Policy': 'same-origin',
+				'Cross-Origin-Embedder-Policy': 'credentialless',
+			},
+		},
 	}
 });
