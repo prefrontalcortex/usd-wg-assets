@@ -5,33 +5,16 @@ import { onMount } from 'svelte';
 import GridItem from '../GridItem.svelte';
 export let data;
 
-function getChilds() {
-    const childItems = new Array<HierarchyEntry>();
-    const addLevel = ((entry: HierarchyEntry) => {
-		childItems.push(...entry.children);
-		entry.children.forEach(child => addLevel(child));
-	});
-	addLevel(data.posts);
-    return childItems;
-}
 
-function getItems() {
-    const items = new Array<HierarchyItem>();
-    const addLevel = ((entry: HierarchyEntry) => {
-        items.push(...entry.items);
-        entry.children.forEach(child => addLevel(child));
-    });
-    addLevel(data.posts);
-    return items;
-}
-
+/*
 onMount(() => {
     dirs = getChilds();
     items = getItems();
 });
+*/
 
-let dirs: HierarchyEntry[];
-let items: HierarchyItem[];
+let dirs: HierarchyEntry[] = getChilds();
+let items: HierarchyItem[] = getItems();
 
 $: currentDir = dirs?.find(child => child.path === "/" + data.slug);
 $: currentItem = items?.find(item => item.path === data.slug);
@@ -46,7 +29,6 @@ function getViewerUrl(abs: string) {
 }
 
 $: absoluteGithubUrl = currentItem ? "https://github.com/usd-wg/assets/blob/main/" + currentItem.path + currentItem.ext : "";
-
 </script>
 
 <div>

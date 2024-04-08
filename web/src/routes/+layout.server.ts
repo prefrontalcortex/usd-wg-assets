@@ -6,7 +6,7 @@ export const trailingSlash = 'always';
 
 const posts = getFiles();
 
-console.log("rendering", posts);
+// console.log("rendering", posts);
 
 export async function load() {
 

@@ -5,12 +5,6 @@ import type { HierarchyEntry } from '$lib/files';
 export let child: HierarchyEntry;
 export let depth = 1;
 
-let opened = false;
-
-function stripFileExtension(filename: string) {
-    return filename.split('.').slice(0, -1).join('.');
-}
-
 </script>
 
 <div class="container">

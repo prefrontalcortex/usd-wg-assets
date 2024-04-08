@@ -76,7 +76,7 @@ export function getFiles() {
         });
 
         // log last item
-        console.log(current.items[current.items.length - 1]);
+        // console.log(current.items[current.items.length - 1]);
     }
 
     const collectFiles = (directory: string) => {
