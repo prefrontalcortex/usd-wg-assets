@@ -1,9 +1,7 @@
 <script lang="ts">
 import { base } from '$app/paths';
-import type { HierarchyEntry, HierarchyItem } from '$lib/files';
-import { onMount } from 'svelte';
 import GridItem from '../GridItem.svelte';
-  import Breadcrumbs from '../Breadcrumbs.svelte';
+import Breadcrumbs from '../Breadcrumbs.svelte';
 export let data;
 
 $: currentPath = data.currentItem ? data.currentItem.path : data.currentDir ? data.currentDir.path : "";

@@ -57,7 +57,7 @@ export async function load({ params }) {
     const path = params.path;
 
     const currentDir = dirs?.find(child => child.path === path || child.path === path + "/");
-    const currentItem = items?.find(item => item.path === path);
+    const currentItem = items?.find(item => item.path === path || item.path + "/" === path);
 
     // console.log("Loading page: " + path + ", currentDir: " + currentDir + ", currentItem: " + currentItem);
 
