@@ -2,6 +2,7 @@
 import { base } from '$app/paths';
 import GridItem from '../GridItem.svelte';
 import Breadcrumbs from '../Breadcrumbs.svelte';
+  import { mode } from '$lib/settings';
 export let data;
 
 $: currentPath = data.currentItem ? data.currentItem.path : data.currentDir ? data.currentDir.path : "";
@@ -15,7 +16,7 @@ function getViewerUrl(abs: string) {
 $: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob/main/" + data.currentItem.path + data.currentItem.ext : "";
 </script>
 
-<div>
+<div class:grid={$mode == "grid"}>
 <a href={base}>See all assets</a><br/>
 
 {#if data.currentDir}
@@ -71,4 +72,11 @@ a.viewer-link {
     flex-direction: column;
     align-items: start;
 }
+
+.grid article {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--image-size), 1fr));
+    gap: 0.5em;
+}
+
 </style>

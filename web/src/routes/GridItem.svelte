@@ -1,24 +1,47 @@
 <script lang="ts">
 import { base } from '$app/paths';
 import type { HierarchyEntry } from '$lib/files';
+import { mode } from '$lib/settings';
 
 export let child: HierarchyEntry;
 export let depth = 1;
 
 let expanded = depth < 2;
 
+$: expand = expanded || $mode === "list";
+
 </script>
 
+{#if $mode == "grid"}
+
+{#if child.items}
+    {#each child.items as item}
+    <a href={base}/{item.path}>
+        <div class="content">
+            <img src={base}/{item.src} alt="Thumbnail"/>
+            <span>{item.filename}</span>
+        </div>
+    </a>
+    {/each}
+
+    {#each child.children as grandchild}
+    <svelte:self child={grandchild} depth={depth+1}/>
+    {/each}
+{/if}
+
+{:else}
 <div class="container">
 {#if child.name}
 <div class="row">
+    {#if $mode == "hierarchy"}
     <input type="checkbox" bind:checked={expanded} />
+    {/if}
     <svelte:element this={"h" + depth}><a href={base}/{child.path}>{child.name}</a><span class="item-count">{child.totalChildren}</span></svelte:element>
 </div>
 {/if}
 
-{#if child.items && expanded}
-<div class="grid">
+{#if child.items && expand}
+<div class="grid content">
     {#each child.items as item}
     <a href={base}/{item.path}>
         <div>
@@ -29,12 +52,14 @@ let expanded = depth < 2;
     {/each}
 </div>
 {/if}
-{#if child.children && expanded}
+
+{#if child.children && expand}
     {#each child.children as grandchild}
     <svelte:self child={grandchild} depth={depth+1}/>
     {/each}
 {/if}
 </div>
+{/if}
 
 <style>
 
@@ -62,7 +87,7 @@ img {
     width: var(--image-size);
 }
 
-.grid span {
+.content span {
     display: block;
     text-align: center;
     font-size: 0.85em;
