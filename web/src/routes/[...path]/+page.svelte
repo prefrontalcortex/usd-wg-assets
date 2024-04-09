@@ -3,50 +3,37 @@ import { base } from '$app/paths';
 import type { HierarchyEntry, HierarchyItem } from '$lib/files';
 import { onMount } from 'svelte';
 import GridItem from '../GridItem.svelte';
+  import Breadcrumbs from '../Breadcrumbs.svelte';
 export let data;
 
-
-/*
-onMount(() => {
-    dirs = getChilds();
-    items = getItems();
-});
-*/
-
-let dirs: HierarchyEntry[] = getChilds();
-let items: HierarchyItem[] = getItems();
-
-$: currentDir = dirs?.find(child => child.path === "/" + data.slug);
-$: currentItem = items?.find(item => item.path === data.slug);
-$: currentPath = currentItem ? currentItem.path : currentDir ? currentDir.path : "";
-
-$: relativeUrl = currentItem ? base + "/" + currentItem.path + currentItem.ext : "";
-$: absoluteUrl = window.location.origin + relativeUrl;
+$: currentPath = data.currentItem ? data.currentItem.path : data.currentDir ? data.currentDir.path : "";
+$: relativeUrl = data.currentItem ? base + "/" + data.currentItem.path + data.currentItem.ext : "";
 
 function getViewerUrl(abs: string) {
     const encoded = encodeURIComponent(abs);
     return "https://usd-viewer.glitch.me/?file=" + encoded;
 }
 
-$: absoluteGithubUrl = currentItem ? "https://github.com/usd-wg/assets/blob/main/" + currentItem.path + currentItem.ext : "";
+$: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob/main/" + data.currentItem.path + data.currentItem.ext : "";
 </script>
 
 <div>
-<a href={base}>See all assets</a>
-<p>{currentPath}</p>
+<a href={base}>See all assets</a><br/>
 
-{#if currentDir}
+{#if data.currentDir}
+    <Breadcrumbs dir={data.currentDir} />
     <article>
-        <GridItem child={currentDir} />
+        <GridItem child={data.currentDir} />
     </article>
-{:else if currentItem}
+{:else if data.currentItem}
+    <Breadcrumbs dir={data.currentItem} />
     <article>
 
-        <span>{currentItem.filename}</span>
+        <span>{data.currentItem.filename}</span>
         <br/>
         
         <a href={getViewerUrl(absoluteGithubUrl)} target="_blank" class="viewer-link">
-            <img src={base}/{currentItem.src} alt="Thumbnail"/>  
+            <img src={base}/{data.currentItem.src} alt="Thumbnail"/>  
             <span>Open in USD Viewer</span>
         </a>
         <a href={absoluteGithubUrl} target="_blank">View file on GitHub</a>
@@ -74,7 +61,6 @@ $: absoluteGithubUrl = currentItem ? "https://github.com/usd-wg/assets/blob/main
 article {
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
 p {
@@ -85,6 +71,6 @@ p {
 a.viewer-link {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
 }
 </style>

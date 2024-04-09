@@ -1,4 +1,5 @@
 <script lang="ts">
+  import path from 'path';
 import GridItem from './GridItem.svelte';
 export let data;
 

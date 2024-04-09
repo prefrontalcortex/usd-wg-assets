@@ -5,10 +5,30 @@ const dirs = getChilds();
 const items = getItems();
 
 const mappedFiles = getChilds().map(file => {
-    return {
-        path: file.name,
+    // trim leading and trailing /
+    let path = file.path;
+    if (path.startsWith("/")) {
+        path = path.substring(1);
     }
-});
+    if (path.endsWith("/")) {
+        path = path.substring(0, path.length - 1);
+    }
+    return {
+        path: path,
+    }
+}).concat(getItems().map(item => {
+    // trim leading and trailing /
+    let path = item.path;
+    if (path.startsWith("/")) {
+        path = path.substring(1);
+    }
+    if (path.endsWith("/")) {
+        path = path.substring(0, path.length - 1);
+    }
+    return {
+        path: path,
+    }
+}));
 
 
 function getChilds() {
@@ -36,17 +56,21 @@ export async function load({ params }) {
 
     const path = params.path;
 
-    const currentDir = dirs?.find(child => child.path + "/" === "/" + path);
-    const currentItem = items?.find(item => item.path + "/" === path);
+    const currentDir = dirs?.find(child => child.path === path || child.path === path + "/");
+    const currentItem = items?.find(item => item.path === path);
 
-    console.log("Loading page: " + path + ", currentDir: " + currentDir + ", currentItem: " + currentItem);
+    // console.log("Loading page: " + path + ", currentDir: " + currentDir + ", currentItem: " + currentItem);
 
     return {
         slug: path,
+        currentDir: currentDir,
+        currentItem: currentItem,
     }
 }
 
+
 /** @type {import('./$types').EntryGenerator} */
-export function entries() {
-    return mappedFiles;
-}
+//export function entries() {
+//    console.log("Generating entries", mappedFiles);
+//    return mappedFiles;
+//}

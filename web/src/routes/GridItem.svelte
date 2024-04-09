@@ -5,14 +5,19 @@ import type { HierarchyEntry } from '$lib/files';
 export let child: HierarchyEntry;
 export let depth = 1;
 
+let expanded = depth < 2;
+
 </script>
 
 <div class="container">
 {#if child.name}
-<svelte:element this={"h" + depth}><a href={base}{child.path}>{child.name}</a><span class="item-count">{child.totalChildren}</span></svelte:element>
+<div class="row">
+    <input type="checkbox" bind:checked={expanded} />
+    <svelte:element this={"h" + depth}><a href={base}/{child.path}>{child.name}</a><span class="item-count">{child.totalChildren}</span></svelte:element>
+</div>
 {/if}
 
-{#if child.items}
+{#if child.items && expanded}
 <div class="grid">
     {#each child.items as item}
     <a href={base}/{item.path}>
@@ -24,7 +29,7 @@ export let depth = 1;
     {/each}
 </div>
 {/if}
-{#if child.children}
+{#if child.children && expanded}
     {#each child.children as grandchild}
     <svelte:self child={grandchild} depth={depth+1}/>
     {/each}
@@ -34,12 +39,13 @@ export let depth = 1;
 <style>
 
 :root {
-    --image-size: 64px;
+    --image-size: 128px;
 }
 
 div.container {
     display: flex;
     flex-direction: column;
+    margin-left: 2em;
 }
 
 div.grid {
@@ -68,4 +74,22 @@ span.item-count {
     margin-left: 0.5em;
 }
 
+div.row {
+    display: flex;
+    align-items: center;
+}
+
+input[type="checkbox"] {
+    width: 1em;
+    height: 1em;
+    margin-right: 0.5em;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.1em;
+    cursor: pointer;
+    appearance: none;
+}
+
+input[type="checkbox"]:checked {
+    background-color: rgba(0,0,0,0.2);
+}
 </style>

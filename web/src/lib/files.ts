@@ -43,9 +43,12 @@ export function getFiles() {
         const parts = file.split("/");
         let current = hierarchy;
         for (const part of parts) {
+            // skip if part has file extension
+            if (path.extname(part) !== "") continue;
+            if (part === "thumbnails") continue;
             let found = current.children.find(child => child.name === part);
             if (!found) {
-                found = { name: part, children: [], items: [], totalChildren: 0, path: current.path + "/" + part};
+                found = { name: part, children: [], items: [], totalChildren: 0, path: current.path + part + "/" };
                 current.children.push(found);
             }
             current = found;
@@ -82,14 +85,21 @@ export function getFiles() {
     const collectFiles = (directory: string) => {
         globSync(base + directory + "**/thumbnails/**.png").map(file => {
             const relativeToBase = normalizePath(path.relative(base, file));
-            const assetName = relativeToBase.split("/")[0];
-            const subassetName = relativeToBase.split("/thumbnails")[0].split("/").pop();
-            addFileToHierarchy(assetName + "/" + subassetName, file);
+            addFileToHierarchy(relativeToBase, file);
         });
     }
 
     collectFiles("test_assets/");
     collectFiles("full_assets/");
+
+    let msg = "";
+    const addToLog = (entry: HierarchyEntry, level: number) => {
+        msg += "  ".repeat(level) + entry.path + " (" + entry.totalChildren + ")\n";
+        entry.children.forEach(child => addToLog(child, level + 1));
+    }
+
+    addToLog(hierarchy, 0);
+    // console.log(msg);
 
     return hierarchy;
 }
