@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { mode } from '$lib/settings';
+import { mode } from '$lib/settings';
 import GridItem from './GridItem.svelte';
 export let data;
 
@@ -8,7 +8,7 @@ export let data;
 <div class:grid={$mode == "grid"}>
 {#each data.posts.children as child}
     <article>
-        <GridItem child={child} depth={1}/>
+        <GridItem child={child} depth={1} mode={$mode}/>
     </article>
 {/each}
 </div>

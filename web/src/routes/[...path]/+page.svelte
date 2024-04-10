@@ -2,11 +2,8 @@
 import { base } from '$app/paths';
 import GridItem from '../GridItem.svelte';
 import Breadcrumbs from '../Breadcrumbs.svelte';
-  import { mode } from '$lib/settings';
+import { mode } from '$lib/settings';
 export let data;
-
-$: currentPath = data.currentItem ? data.currentItem.path : data.currentDir ? data.currentDir.path : "";
-$: relativeUrl = data.currentItem ? base + "/" + data.currentItem.path + data.currentItem.ext : "";
 
 function getViewerUrl(abs: string) {
     const encoded = encodeURIComponent(abs);
@@ -16,13 +13,13 @@ function getViewerUrl(abs: string) {
 $: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob/main/" + data.currentItem.path + data.currentItem.ext : "";
 </script>
 
-<div class:grid={$mode == "grid"}>
+<div class="grid">
 <a href={base}>See all assets</a><br/>
 
 {#if data.currentDir}
     <Breadcrumbs dir={data.currentDir} />
     <article>
-        <GridItem child={data.currentDir} />
+        <GridItem child={data.currentDir} mode="grid"/>
     </article>
 {:else if data.currentItem}
     <Breadcrumbs dir={data.currentItem} />
@@ -30,12 +27,13 @@ $: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob
 
         <span>{data.currentItem.filename}</span>
         <br/>
-        
-        <a href={getViewerUrl(absoluteGithubUrl)} target="_blank" class="viewer-link">
-            <img src={base}/{data.currentItem.src} alt="Thumbnail"/>  
-            <span>Open in USD Viewer</span>
-        </a>
-        <a href={absoluteGithubUrl} target="_blank">View file on GitHub</a>
+        <div class="grid">
+            <a href={getViewerUrl(absoluteGithubUrl)} target="_blank" class="viewer-link">
+                <img src={base}/{data.currentItem.src} alt="Thumbnail"/>  
+                <span>Open in USD Viewer</span>
+            </a>
+            <a href={absoluteGithubUrl} target="_blank">View file on GitHub</a>
+        </div>
         
         <!--
 
@@ -54,6 +52,10 @@ $: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob
 {JSON.stringify(data, null, 2)}
 </pre></code>
 {/if}
+
+<code><pre>{data.readmeMarkdown}</pre></code>
+<code><pre>{data.usdText}</pre></code>
+
 </div>
 
 <style>
@@ -77,6 +79,11 @@ a.viewer-link {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(var(--image-size), 1fr));
     gap: 0.5em;
+}
+
+code {
+    white-space: pre-wrap;
+    font-size: 0.9em;
 }
 
 </style>

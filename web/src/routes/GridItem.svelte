@@ -1,18 +1,18 @@
 <script lang="ts">
 import { base } from '$app/paths';
 import type { HierarchyEntry } from '$lib/files';
-import { mode } from '$lib/settings';
 
 export let child: HierarchyEntry;
 export let depth = 1;
+export let mode: string = "grid";
 
 let expanded = depth < 2;
 
-$: expand = expanded || $mode === "list";
+$: expand = expanded || mode === "list";
 
 </script>
 
-{#if $mode == "grid"}
+{#if mode == "grid"}
 
 {#if child.items}
     {#each child.items as item}
@@ -25,22 +25,22 @@ $: expand = expanded || $mode === "list";
     {/each}
 
     {#each child.children as grandchild}
-    <svelte:self child={grandchild} depth={depth+1}/>
+    <svelte:self child={grandchild} depth={depth+1} mode={mode}/>
     {/each}
 {/if}
 
 {:else}
 <div class="container">
 {#if child.name}
-<div class="row">
-    {#if $mode == "hierarchy"}
-    <input type="checkbox" bind:checked={expanded} />
-    {/if}
-    <svelte:element this={"h" + depth}><a href={base}/{child.path}>{child.name}</a><span class="item-count">{child.totalChildren}</span></svelte:element>
-</div>
+<li>
+    <span on:click={() => expanded = !expanded}>
+        <a href={base}/{child.path}>{child.name}</a>
+        <span class="item-count">{child.totalChildren}</span>
+    </span>
+</li>
 {/if}
 
-{#if child.items && expand}
+{#if child.items && expand && false}
 <div class="grid content">
     {#each child.items as item}
     <a href={base}/{item.path}>
@@ -54,9 +54,11 @@ $: expand = expanded || $mode === "list";
 {/if}
 
 {#if child.children && expand}
+<ul>
     {#each child.children as grandchild}
-    <svelte:self child={grandchild} depth={depth+1}/>
+    <svelte:self child={grandchild} depth={depth+1} mode={mode}/>
     {/each}
+</ul>
 {/if}
 </div>
 {/if}
@@ -70,7 +72,7 @@ $: expand = expanded || $mode === "list";
 div.container {
     display: flex;
     flex-direction: column;
-    margin-left: 2em;
+    margin-left: 1em;
 }
 
 div.grid {

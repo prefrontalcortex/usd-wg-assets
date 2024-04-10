@@ -1,5 +1,8 @@
 <script lang="ts">
 import { mode } from '$lib/settings';
+import GridItem from './GridItem.svelte';
+
+export let data;
 
 </script>
 
@@ -9,8 +12,16 @@ import { mode } from '$lib/settings';
     <label>Grid<input type="radio" name="mode" value="grid" bind:group={$mode}/></label>
 </div>
 
-
+<div class="align">
+<div>
+<article>
+    <GridItem child={data.posts} mode="hierarchy" />
+</article>
+</div>
+<div>
 <slot></slot>
+</div>
+</div>
 
 <div class="footer">
     <p>Data from <a href="https://github.com/usd-wg/assets" target="_blank">usd-wg/assets</a></p>
@@ -66,6 +77,11 @@ div.header label:first-child {
 div.header label:last-child {
     border-top-right-radius: 3em;
     border-bottom-right-radius: 3em;
+}
+
+div.align {
+    display: flex;
+    justify-content: space-between;
 }
 
 </style>
