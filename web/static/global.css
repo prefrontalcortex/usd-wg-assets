@@ -2,12 +2,22 @@ body {
     font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
     font-weight: 300;
     margin: 40px;
+    font-family: "Fira Sans", sans-serif;
+    line-height: 1.3em;
+}
+
+code {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.85em;
+}
+
+pre.shiki {
+    background-color: rgb(229 229 229 / 15%) !important;
+    padding: 1em;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
-    letter-spacing: 0.1em;
-    margin: 0;
 }
 
 h1 {
@@ -23,7 +33,7 @@ h3, h4, h5, h6 {
 }
 
 a {
-    color: grey;
+    color: #128d8e;
     text-decoration: none;
 }
 
@@ -36,11 +46,28 @@ button {
     color: black;
 }
 
-ul {
+.container ul {
     padding: 0;
     margin: 0;
 }
 
-ul li {
+.container ul li {
     list-style-type: none;
+}
+
+ol li {
+    margin: 0;
+    padding: 0;
+}
+
+ol li p, ul li p {
+    margin: 0.25em;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+img {
+    max-width: 100%;
 }

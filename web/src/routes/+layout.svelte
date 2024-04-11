@@ -5,24 +5,23 @@ import GridItem from './GridItem.svelte';
 export let data;
 
 </script>
-
+<!--
 <div class="header">
     <label>Hierarchy<input type="radio" name="mode" value="hierarchy" bind:group={$mode}/></label>
     <label>List<input type="radio" name="mode" value="list" bind:group={$mode}/></label>
     <label>Grid<input type="radio" name="mode" value="grid" bind:group={$mode}/></label>
 </div>
+-->
 
 <div class="align">
-<div>
-<article>
-    <GridItem child={data.posts} mode="hierarchy" />
-</article>
-</div>
-<div>
-<slot></slot>
-</div>
-</div>
+    <div class="hierarchy-header">
+        <GridItem child={data.posts} mode="hierarchy" />
+    </div>
 
+    <div class="page">
+        <slot></slot>
+    </div>
+</div>
 <div class="footer">
     <p>Data from <a href="https://github.com/usd-wg/assets" target="_blank">usd-wg/assets</a></p>
     <p>
@@ -43,45 +42,23 @@ p {
     color: rgba(0, 0, 0, 0.3);
 }
 
-div.header {
-    margin-bottom: 1.0em;
-}
-
-div.header input {
-    appearance: none;
-    margin: 0;
-}
-
-div.header label {
-    padding: 0.5em;
-    margin-right: -0.4em;
-    background-color: #fff;
-    text-transform: uppercase;
-    font-size: 0.7em;
-    letter-spacing: 1px;
-    cursor: pointer;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: #aaa;
-}
-
-div.header label:has(input:checked) {
-    background-color: #eee;
-    color: #333;
-}
-
-div.header label:first-child {
-    border-top-left-radius: 3em;
-    border-bottom-left-radius: 3em;
-}
-
-div.header label:last-child {
-    border-top-right-radius: 3em;
-    border-bottom-right-radius: 3em;
-}
-
 div.align {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+}
+
+.hierarchy-header {
+    position: sticky;
+    top: 0;
+    max-width: 400px;
+    flex: auto;
+    overflow-x: auto;
+}
+
+div.page {
+    flex: 1;
+    margin-left: 1em;
+    max-width: 1200px;
 }
 
 </style>

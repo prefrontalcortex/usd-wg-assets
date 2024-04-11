@@ -2,7 +2,7 @@
 import { base } from '$app/paths';
 import GridItem from '../GridItem.svelte';
 import Breadcrumbs from '../Breadcrumbs.svelte';
-import { mode } from '$lib/settings';
+import { path } from '$lib/settings';
 export let data;
 
 function getViewerUrl(abs: string) {
@@ -11,28 +11,35 @@ function getViewerUrl(abs: string) {
 }
 
 $: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob/main/" + data.currentItem.path + data.currentItem.ext : "";
+$: $path = data.slug + "/";
+$: dir = (data.currentDir?.items?.length != 1 ? data.currentDir : null);
+$: item = data.currentItem || (data.currentDir?.items.length == 1 ? data.currentDir.items[0] : null);
+
 </script>
 
-<div class="grid">
+<div>
+
+<!--
 <a href={base}>See all assets</a><br/>
+-->
 
-{#if data.currentDir}
-    <Breadcrumbs dir={data.currentDir} />
-    <article>
-        <GridItem child={data.currentDir} mode="grid"/>
+{#if dir}
+    <Breadcrumbs dir={dir} />
+    <article class="grid">
+        <GridItem child={dir} mode="grid"/>
     </article>
-{:else if data.currentItem}
-    <Breadcrumbs dir={data.currentItem} />
+{:else if item}
+    <Breadcrumbs dir={item} />
     <article>
-
-        <span>{data.currentItem.filename}</span>
-        <br/>
-        <div class="grid">
+        <div>
             <a href={getViewerUrl(absoluteGithubUrl)} target="_blank" class="viewer-link">
-                <img src={base}/{data.currentItem.src} alt="Thumbnail"/>  
-                <span>Open in USD Viewer</span>
+                <img src={base}/{item.src} alt="Automatically generated Thumbnail"/>  
+                <span>Open in web-based USD Viewer</span>
             </a>
-            <a href={absoluteGithubUrl} target="_blank">View file on GitHub</a>
+            <a href={absoluteGithubUrl} target="_blank">View {item.filename}{item.ext} on GitHub</a><br/>
+            {#if data.usdText}
+            <a href="#code">View USD code</a>
+            {/if}
         </div>
         
         <!--
@@ -44,17 +51,18 @@ $: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob
         -->
     </article>
 {:else}
-<code><pre>
-{data.slug}
------
-{JSON.stringify(data.posts.children, null, 2)}
------
-{JSON.stringify(data, null, 2)}
-</pre></code>
+<p>Something went wrong, please report a bug with this URL and where you came from. Thanks!</p>
 {/if}
 
-<code><pre>{data.readmeMarkdown}</pre></code>
-<code><pre>{data.usdText}</pre></code>
+{@html data.readmeMarkdown}
+
+<br/>
+<a href={data.absoluteReadmeUrl} target="_blank">Edit this page</a>
+
+{#if data.usdText}
+<h2 id="code">{data.currentItem.filename}{data.currentItem.ext}</h2>
+<code><pre>{@html data.usdText}</pre></code>
+{/if}
 
 </div>
 
@@ -62,6 +70,7 @@ $: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob
 article {
     display: flex;
     flex-direction: column;
+    margin-bottom: 2em;
 }
 
 p {
@@ -75,7 +84,17 @@ a.viewer-link {
     align-items: start;
 }
 
-.grid article {
+a.viewer-link img {
+    border: 1px solid transparent;
+    margin: 0.5em 0em;
+}
+
+a.viewer-link:hover img {
+    background-color: white;
+    border: 1px solid rgb(235, 235, 235);
+}
+
+article.grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(var(--image-size), 1fr));
     gap: 0.5em;

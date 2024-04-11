@@ -1,6 +1,7 @@
 <script lang="ts">
 import { base } from '$app/paths';
 import type { HierarchyEntry } from '$lib/files';
+import { path } from '$lib/settings';
 
 export let child: HierarchyEntry;
 export let depth = 1;
@@ -8,7 +9,8 @@ export let mode: string = "grid";
 
 let expanded = depth < 2;
 
-$: expand = expanded || mode === "list";
+$: expand = expanded || mode === "list" || $path.startsWith(child.path);
+$: selected = $path.startsWith(child.path);
 
 </script>
 
@@ -32,25 +34,12 @@ $: expand = expanded || mode === "list";
 {:else}
 <div class="container">
 {#if child.name}
-<li>
-    <span on:click={() => expanded = !expanded}>
+<li class:selected={selected}>
+    <span on:click={() => expanded = !expanded} class="folder">
         <a href={base}/{child.path}>{child.name}</a>
         <span class="item-count">{child.totalChildren}</span>
     </span>
 </li>
-{/if}
-
-{#if child.items && expand && false}
-<div class="grid content">
-    {#each child.items as item}
-    <a href={base}/{item.path}>
-        <div>
-            <img src={base}/{item.src} alt="Thumbnail"/>
-            <span>{item.filename}</span>
-        </div>
-    </a>
-    {/each}
-</div>
 {/if}
 
 {#if child.children && expand}
@@ -67,6 +56,11 @@ $: expand = expanded || mode === "list";
 
 :root {
     --image-size: 128px;
+}
+
+a {
+    color: gray;
+    text-decoration: none;
 }
 
 div.container {
@@ -101,22 +95,13 @@ span.item-count {
     margin-left: 0.5em;
 }
 
-div.row {
-    display: flex;
-    align-items: center;
+li.selected a {
+    color: black;
+    font-weight: bold;
 }
 
-input[type="checkbox"] {
-    width: 1em;
-    height: 1em;
-    margin-right: 0.5em;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 0.1em;
-    cursor: pointer;
-    appearance: none;
+.folder {
+    white-space: nowrap;
 }
 
-input[type="checkbox"]:checked {
-    background-color: rgba(0,0,0,0.2);
-}
 </style>
