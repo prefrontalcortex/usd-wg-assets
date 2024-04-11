@@ -14,8 +14,19 @@ $: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob
 $: $path = data.slug + "/";
 $: dir = (data.currentDir?.items?.length != 1 ? data.currentDir : null);
 $: item = data.currentItem || (data.currentDir?.items.length == 1 ? data.currentDir.items[0] : null);
+$: title = data.currentItem ? (data.currentItem.path.split("/").pop() + data.currentItem.ext) : "USD Assets";
+$: thumbnailPath = item ? "https://github.com/usd-wg/assets/blob/main" + "/" + item.src + "?raw=true" : "";
 
 </script>
+
+<svelte:head>
+<title>{ title }</title>
+<meta name="description" content="USD Assets" />
+<meta property="og:title" content={ title } />
+<meta property="og:description" content="USD Assets" />
+<meta property="og:image" content={thumbnailPath} />
+<meta property="og:url" content={absoluteGithubUrl} />
+</svelte:head>
 
 <div>
 
