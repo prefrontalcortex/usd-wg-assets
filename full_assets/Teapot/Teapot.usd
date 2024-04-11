@@ -9,6 +9,20 @@
     defaultPrim = "Teapot"
 )
 
+def DomeLight "MyCustomDomeLight"
+{
+    float intensity = 500
+    color3f color = (1, 0, 0)
+}
+
+def PointLight "MyPointLight"
+{
+    float intensity = 100.0
+    color3f color = (0, 1, 0)
+    float3 translate = (2, 2, 2)
+}
+
+
 def Xform "Teapot" (
     assetInfo = {
         dictionary credits = {
