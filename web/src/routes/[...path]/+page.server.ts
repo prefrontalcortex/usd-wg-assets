@@ -5,7 +5,7 @@ import path from 'path';
 import { compile } from 'mdsvex';
 import { getHighlighter } from 'shiki';
 import remarkGfm from 'remark-gfm';
-import { decompressSync, unzipSync } from 'fflate';
+import { unzipSync } from 'fflate';
 
 const files = getFiles();
 const dirs = getChilds();
@@ -38,7 +38,8 @@ export async function load({ params }) {
     // usdLang from https://github.com/AnimalLogic/AL_usd_vscode_extension/blob/master/syntaxes/usd.tmLanguage.json
     const highlighter = await getHighlighter({ langs: ['javascript', 'python', usdLang], themes: [theme]});
 
-    const _path = params.path;
+    let _path = params.path;
+    if (_path.endsWith("/")) _path = _path.substring(0, _path.length - 1);
 
     const currentDir = dirs?.find(child => child.path === _path || child.path === _path + "/");
     const currentItem = items?.find(item => item.path === _path || item.path + "/" === _path);
@@ -87,8 +88,10 @@ export async function load({ params }) {
             const firstChar = usdText[0];
             const secondChar = usdText[1];
 
+            const unpackUsdz = true; // for faster local testing
+
             // check if we have a compressed file
-            if (firstChar == "P" && secondChar == "K") {
+            if (unpackUsdz && firstChar == "P" && secondChar == "K") {
                 try {
                     const decompressed = unzipSync(data);
                     const firstKey = Object.keys(decompressed)[0];
@@ -291,6 +294,9 @@ export async function load({ params }) {
             ]
         }))?.code;
     }
+
+    // if (_path.includes("King"))
+    //     console.log(currentItem, currentItem?.path + currentItem?.ext, items.filter(item => item.path.includes("King")).map(item => item.path + item.ext), _path);
 
     return {
         slug: _path,
