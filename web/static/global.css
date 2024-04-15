@@ -4,6 +4,13 @@ body {
     margin: 40px;
     font-family: "Fira Sans", sans-serif;
     line-height: 1.3em;
+    font-size: 14px;
+}
+
+button {
+    font-family: "Fira Sans", sans-serif;
+    font-weight: 300;
+    line-height: 1.3em;
 }
 
 code {

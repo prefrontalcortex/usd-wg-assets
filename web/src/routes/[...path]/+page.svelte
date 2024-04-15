@@ -10,11 +10,11 @@ function getViewerUrl(abs: string) {
     return "https://usd-viewer.glitch.me/?file=" + encoded;
 }
 
-$: absoluteGithubUrl = data.currentItem ? "https://github.com/usd-wg/assets/blob/main/" + data.currentItem.path + data.currentItem.ext : "";
+$: absoluteGithubUrl = item ? "https://github.com/usd-wg/assets/blob/main/" + item.path + item.ext : "";
 $: $path = data.slug + "/";
 $: dir = (data.currentDir?.items?.length != 1 ? data.currentDir : null);
 $: item = data.currentItem || (data.currentDir?.items.length == 1 ? data.currentDir.items[0] : null);
-$: title = data.currentItem ? (data.currentItem.path.split("/").pop() + data.currentItem.ext) : "USD Assets";
+$: title = item ? (item.path.split("/").pop() + item.ext) : "USD Assets";
 $: thumbnailPath = item ? "https://github.com/usd-wg/assets/blob/main" + "/" + item.src + "?raw=true" : "";
 
 </script>
@@ -70,8 +70,8 @@ $: thumbnailPath = item ? "https://github.com/usd-wg/assets/blob/main" + "/" + i
 <br/>
 <a href={data.absoluteReadmeUrl} target="_blank">Edit this page</a>
 
-{#if data.usdText}
-<h2 id="code">{data.currentItem.filename}{data.currentItem.ext}</h2>
+{#if data.usdText && item}
+<h2 id="code">{item.filename}{item.ext}</h2>
 <code><pre>{@html data.usdText}</pre></code>
 {/if}
 

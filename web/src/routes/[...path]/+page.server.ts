@@ -67,6 +67,24 @@ export async function load({ params }) {
         return findReadme(parent);
     }
 
+    const sanitizeUsda = (text: string) => {
+        // in this text, find all long lines (longer than 200 chars)
+        const lines = text.split("\n");
+        const maxLen = 100;
+        for (let l = 0; l < lines.length; l++) {
+            let line = lines[l];
+            if (line.length > maxLen && (line.includes("= [") || line.includes("=["))) {
+                line = line.substring(0, maxLen) + "... (truncated)]";
+            }
+            lines[l] = line;
+        } 
+        text = lines.join("\n");
+
+        // if (text.length > 10000) text = text.substring(0, 10000) + "...";
+
+        return text;
+    };
+
     if (currentItem) {
         usdText = fs.readFileSync(currentItem.absoluteUsd, 'utf8');
         const data = new Uint8Array(fs.readFileSync(currentItem.absoluteUsd, null).buffer);
@@ -102,22 +120,7 @@ export async function load({ params }) {
 
                     if (isAscii(firstChar))
                     {
-                        // in this text, find all long lines (longer than 200 chars)
-                        const lines = text.split("\n");
-                        const maxLen = 100;
-                        for (let l = 0; l < lines.length; l++) {
-                            let line = lines[l];
-                            if (line.length > maxLen && (line.includes("= [") || line.includes("=["))) {
-                                line = line.substring(0, maxLen) + "... (truncated)]";
-                            }
-                            lines[l] = line;
-                        } 
-                        text = lines.join("\n");
-
-                        if (text.length > 10000) text = text.substring(0, 10000) + "...";
-
-                        // console.log(text)
-                        usdText = text;
+                        usdText = sanitizeUsda(text);
                     }
                     else {
                         usdText = "";
@@ -135,6 +138,9 @@ export async function load({ params }) {
             }             
             else if (!isAscii(firstChar)) {
                 usdText = undefined;
+            }
+            else {
+                usdText = sanitizeUsda(usdText);
             }
         }
 

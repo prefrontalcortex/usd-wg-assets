@@ -35,10 +35,10 @@ $: selected = $path.startsWith(child.path);
 <div class="container">
 {#if child.name}
 <li class:selected={selected}>
-    <span on:click={() => expanded = !expanded} class="folder">
+    <button on:click={() => expanded = !expanded} class="folder" tabindex="0">
         <a href={base}/{child.path}>{child.name}</a>
         <span class="item-count">{child.totalChildren}</span>
-    </span>
+    </button>
 </li>
 {/if}
 
@@ -69,12 +69,6 @@ div.container {
     margin-left: 1em;
 }
 
-div.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--image-size), 1fr));
-    gap: 0.5em;
-}
-
 div.grid > div img {
     outline: 1px solid #cccccc34;
 }
@@ -93,6 +87,7 @@ img {
 
 span.item-count {
     margin-left: 0.5em;
+    opacity: 0.2;
 }
 
 li.selected a {
@@ -102,6 +97,14 @@ li.selected a {
 
 .folder {
     white-space: nowrap;
+}
+
+button.folder {
+    appearance: none;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    font-size: 14px;
 }
 
 </style>
