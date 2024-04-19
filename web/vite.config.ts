@@ -3,6 +3,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import path from 'path';
 import { defineConfig } from 'vite';
 import { viteStaticCopy, type Target } from 'vite-plugin-static-copy';
+import mkCert from 'vite-plugin-mkcert';
 
 export default defineConfig(() => {
 
@@ -36,13 +37,7 @@ export default defineConfig(() => {
 		plugins: [
 			viteStaticCopy({ targets: copyTargets, structured: false }),
 			sveltekit(),
-		],
-		server: {
-			headers: {
-				// allow SharedArrayBuffers
-				'Cross-Origin-Opener-Policy': 'same-origin',
-				'Cross-Origin-Embedder-Policy': 'credentialless',
-			},
-		},
+			// mkCert(),
+		]
 	}
 });

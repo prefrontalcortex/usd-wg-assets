@@ -43,23 +43,23 @@ $: thumbnailPath = item ? "https://github.com/usd-wg/assets/blob/main" + "/" + i
     <Breadcrumbs dir={item} />
     <article>
         <div>
+            {#if globalThis["window"] && window.crossOriginIsolated}
+
+            <iframe src={getViewerUrl(absoluteGithubUrl)} sandbox="allow-scripts allow-same-origin" allow="cross-origin-isolated"></iframe>
+
+            {:else}
+            
             <a href={getViewerUrl(absoluteGithubUrl)} target="_blank" class="viewer-link">
                 <img src={base}/{item.src} alt="Automatically generated Thumbnail"/>  
                 <span>Open in web-based USD Viewer</span>
             </a>
+
+            {/if}
             <a href={absoluteGithubUrl} target="_blank">View {item.filename}{item.ext} on GitHub</a><br/>
             {#if data.usdText}
             <a href="#code">View USD code</a>
             {/if}
         </div>
-        
-        <!--
-
-        <a href={relativeUrl} download>Download</a>
-        <a href={getViewerUrl(absoluteUrl)} target="_blank">View in USD Viewer (local file)</a>
-        <iframe src="https://usd-viewer.glitch.me/?file={absoluteUrl}" sandbox="allow-scripts allow-same-origin"></iframe>
-        
-        -->
     </article>
 {:else}
 <p>Something went wrong, please report a bug with this URL and where you came from. Thanks!</p>
@@ -114,6 +114,13 @@ article.grid {
 code {
     white-space: pre-wrap;
     font-size: 0.9em;
+}
+
+iframe {
+    outline: 0;
+    border: 0;
+    width: 100%;
+    height: 400px;
 }
 
 </style>
