@@ -17,7 +17,7 @@ function goFullscreen(event: MouseEvent & { currentTarget: EventTarget & HTMLBut
 </script>
 
 <svelte:head>
-  <script type="text/javascript" async src="modules/es-module-shims@1.8.0.js"></script>
+  <script type="text/javascript" async src="{base}/viewer/modules/es-module-shims@1.8.0.js"></script>
   <script type="importmap">
     {
       "imports": {
