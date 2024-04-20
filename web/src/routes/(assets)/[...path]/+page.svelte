@@ -1,12 +1,14 @@
 <script lang="ts">
 import { base } from '$app/paths';
-import GridItem from '../GridItem.svelte';
-import Breadcrumbs from '../Breadcrumbs.svelte';
+import GridItem from '../../GridItem.svelte';
+import Breadcrumbs from '../../Breadcrumbs.svelte';
 import { path } from '$lib/settings';
 export let data;
 
 function getViewerUrl(abs: string) {
     const encoded = encodeURIComponent(abs);
+    return base + "/viewer/view?file=" + encoded;
+    return "http://localhost:3003/?file=" + encoded;
     return "https://usd-viewer.glitch.me/?file=" + encoded;
 }
 

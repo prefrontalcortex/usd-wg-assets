@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mode } from '$lib/settings';
-import GridItem from './GridItem.svelte';
+import GridItem from './../GridItem.svelte';
 
 export let data;
 

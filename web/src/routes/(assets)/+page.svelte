@@ -1,5 +1,5 @@
 <script lang="ts">
-import GridItem from './GridItem.svelte';
+import GridItem from './../GridItem.svelte';
 
 export let data;
 
