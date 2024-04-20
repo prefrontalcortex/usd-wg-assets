@@ -3,7 +3,7 @@ import { base } from '$app/paths';
 
 let container: HTMLDivElement;
 
-function goFullscreen(event: MouseEvent & { currentTarget: EventTarget & HTMLDivElement; }) {
+function goFullscreen(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement; }) {
   console.log("goFullscreen");
   const elem = document.body;
   if (elem.requestFullscreen) {
@@ -36,7 +36,7 @@ function goFullscreen(event: MouseEvent & { currentTarget: EventTarget & HTMLDiv
     {#if false}
     <a class="file" href="?file=">Clear<br/><span>Drop USDZ to load</span></a>
 
-    <a class="filename"></a>
+    <a href="." class="filename">Filename.usd</a>
     {/if}
     
     <p id="message-log">
@@ -49,12 +49,6 @@ function goFullscreen(event: MouseEvent & { currentTarget: EventTarget & HTMLDiv
     </div>
     
 </div>
-
-{#if false}
-<div class="footer">
-  <a id="quick-look-link" rel="ar" href="#"><img width="128" height="128" src="ARKit_Glyph.svg" title="ARKit Glyph" style="max-width:100%; height:auto;"></a>
-</div>
-{/if}
 
 <style>
 

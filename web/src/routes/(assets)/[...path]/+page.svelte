@@ -8,8 +8,7 @@ export let data;
 function getViewerUrl(abs: string) {
     const encoded = encodeURIComponent(abs);
     return base + "/viewer/view?file=" + encoded;
-    return "http://localhost:3003/?file=" + encoded;
-    return "https://usd-viewer.glitch.me/?file=" + encoded;
+    // return "https://usd-viewer.glitch.me/?file=" + encoded;
 }
 
 $: absoluteGithubUrl = item ? "https://github.com/usd-wg/assets/blob/main/" + item.path + item.ext : "";
