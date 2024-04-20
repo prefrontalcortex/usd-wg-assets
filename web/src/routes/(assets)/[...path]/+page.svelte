@@ -7,7 +7,7 @@ export let data;
 
 function getViewerUrl(abs: string) {
     const encoded = encodeURIComponent(abs);
-    return base + "/viewer/view?file=" + encoded;
+    return base + "/view?file=" + encoded;
     // return "https://usd-viewer.glitch.me/?file=" + encoded;
 }
 

@@ -1,6 +1,5 @@
 <script lang="ts">
 import { base } from '$app/paths';
-
 let container: HTMLDivElement;
 
 function goFullscreen(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement; }) {
@@ -17,18 +16,15 @@ function goFullscreen(event: MouseEvent & { currentTarget: EventTarget & HTMLBut
 </script>
 
 <svelte:head>
-  <script type="text/javascript" async src="{base}/viewer/modules/es-module-shims@1.8.0.js"></script>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.163.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.163.0/examples/jsm/"
-      }
-    }
-  </script>
-  <script type="module" src="https://unpkg.com/three@0.163.0/build/three.module.js"></script>
+    <script type="module" src="https://unpkg.com/three@0.163.0/build/three.module.js"></script>
     <script src="{base}/viewer/emHdBindings.js" type="text/javascript"></script>
     <script type="module" src="{base}/viewer/index.js"></script>
+    <script type="module">
+      import { init } from "/usd-wg-assets/viewer/index.js";
+      init({
+        hdrPath: '../viewer/environments/neutral.hdr',
+      });
+    </script>
 </svelte:head>
 
 <div id="container" bind:this={container}>
