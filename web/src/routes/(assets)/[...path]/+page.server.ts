@@ -45,7 +45,7 @@ export async function load({ params }) {
     let currentItem = items?.find(item => item.path === _path || item.path + "/" === _path);
 
     // fall back to first item if we have a directory with only one item
-    currentItem = currentItem || (currentDir?.items.length == 1 ? currentDir.items[0] : undefined);
+    currentItem = currentItem || (currentDir?.items.length == 1 && currentDir?.children.length == 0 ? currentDir.items[0] : undefined);
 
     // console.log("Loading page: " + path + ", currentDir: " + currentDir + ", currentItem: " + currentItem);
 
