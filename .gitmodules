@@ -1,0 +1,3 @@
+[submodule "web/src/viewer"]
+	path = web/src/viewer
+	url = https://github.com/needle-tools/usd-viewer.git
