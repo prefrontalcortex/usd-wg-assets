@@ -79,7 +79,7 @@ def generate_thumbnail(usd_file, verbose, extension, render_purpose_tokens, came
     if verbose:
         print("Step 2: Taking the snapshot...")
 
-    return take_snapshot(file_to_snapshot, camera_to_snapshot_from, image_path)
+    return take_snapshot(file_to_snapshot, camera_to_snapshot_from, image_path, args.dome_light)
 
 def get_or_create_file_to_snapshot(subject_stage, usd_file, render_purpose_tokens):
     up_axis = UsdGeom.GetStageUpAxis(subject_stage)
@@ -158,20 +158,22 @@ def create_camera_translation_and_clipping(subject_stage, camera_prim, render_pu
 
     clipIndex = 1 if is_z_up else 2
 
-    if args.verbose:
-        print("Calculating clipping planes... " + str(clippingPlanes))
-
     # We're extending the clipping planes in both directions to accommodate for different fields of view
     nearClip = (distanceInCm + min_bound[clipIndex]) * 0.5
     farClip = (distanceInCm + max_bound[clipIndex]) * 2
     nearClip = max(nearClip, 0.0000001)
     clippingPlanes = Gf.Vec2f(nearClip, farClip)
     camera_prim.GetClippingRangeAttr().Set(clippingPlanes)
+    if args.verbose:
+        print("Calculating clipping planes... " + str(clippingPlanes))
 
     return cameraPosition
 
 def get_bounding_box(subject_stage, render_purpose_tokens):
-    bboxCache = UsdGeom.BBoxCache(Usd.TimeCode(0.0), render_purpose_tokens)
+
+    time_codes_per_second = subject_stage.GetTimeCodesPerSecond()
+    time_code = Usd.TimeCode.Default() if time_codes_per_second == 0.0 else Usd.TimeCode(0.0)
+    bboxCache = UsdGeom.BBoxCache(time_code, render_purpose_tokens)
     # Compute the bounding box for all geometry under the root
     root = subject_stage.GetPseudoRoot()
     return bboxCache.ComputeWorldBound(root).GetBox()
@@ -230,9 +232,13 @@ def sublayer_subject(camera_stage, input_file):
 
     return camera_stage
 
-def take_snapshot(file, camera, image_name):
+def take_snapshot(file, camera, image_name, dome_light):
     renderer = get_renderer()
-    cmd = ['usdrecord', '--camera', camera, '--imageWidth', str(args.width), '--renderer', renderer, file, image_name]
+    cmd = ['usdrecord', '--camera', camera, '--imageWidth', str(args.width), '--renderer', renderer, file, image_name ]
+
+    if dome_light: 
+        cmd.append('--disableCameraLight')
+        
     run_os_specific_command(cmd)
     return image_name
 
