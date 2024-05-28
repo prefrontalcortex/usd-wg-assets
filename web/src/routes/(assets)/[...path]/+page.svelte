@@ -46,7 +46,10 @@ $: thumbnailPath = item ? "https://github.com/usd-wg/assets/blob/main" + "/" + i
         <div>
             {#if globalThis["window"] && window.crossOriginIsolated}
 
-            <iframe src={getViewerUrl(absoluteGithubUrl)} sandbox="allow-scripts allow-same-origin" allow="cross-origin-isolated"></iframe>
+            <iframe title="USD Viewer" src={getViewerUrl(absoluteGithubUrl)} 
+                sandbox="allow-scripts allow-same-origin allow-downloads" 
+                allow="cross-origin-isolated">
+            </iframe>
 
             {:else}
             
