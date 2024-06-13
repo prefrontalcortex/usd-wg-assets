@@ -1,3 +1,7 @@
+> [!WARNING]
+> # This repository has moved
+> ## This repository has moved to https://github.com/needle-tools/usd-wg-assets and the viewer has moved to https://usd-assets.needle.tools.
+
 # USD Assets Working Group
 
 This repository contains examples of USD assets provided under the umbrella of the [ASWF USD WG](https://wiki.aswf.io/display/WGUSD).
